@@ -36,29 +36,29 @@ while not isCorrect(myTeam):
 
     toFind = 6 - len(myTeam)
 
-    for _ in range(toFind):
+    for _ in range(toFind):  # Pokemons a buscar
         team.append(randint(1, 809))
 
-    for tr in data.find_all("tr"):
-        nametag = tr.find("td")
-        pokeid = nametag.find_all("span")[2]
+    for tr in data.find_all("tr"):  # Tots els tr de la taula: Totes les dades de cada pokemon
+        nametag = tr.find("td")  # Primer td: informació del nom
+        pokeid = nametag.find_all("span")[2]  # Span amb la id
         if int(pokeid.text) in team:
             myPokemon = []
-            inTeam.append(tr)
-            nametag = tr.find_all("td")[1]
-            name = nametag.find('a').text
+            inTeam.append(tr)  # Guardo totes les dades a inTeam
+            nametag = tr.find_all("td")[1]  # Per buscar el nom
+            name = nametag.find('a').text  # Nom
             myPokemon.append(name)
-            nametag = tr.find_all("td")[2]
-            a_types = nametag.find_all("a")
+            nametag = tr.find_all("td")[2]  # Per buscar els tipus
+            a_types = nametag.find_all("a")  # Tots els tipus
             for a in a_types:
-                myPokemon.append(a.text)
-            myPokemon.append(int(pokeid.text))
+                myPokemon.append(a.text)  # Afegir els tipus
+            myPokemon.append(int(pokeid.text))  # Afegir id
             team.remove(int(pokeid.text))
             if len(myTeam) < 6:
-                myTeam.append(myPokemon)
+                myTeam.append(myPokemon)  # Afegir pokemon a l'equip
 
     i = len(myTeam) - 1
-    while i >= 0:
+    while i >= 0:  # Eliminar pokemons que no siguin doble tipo
         if len(myTeam[i]) < 4:
             myTeam.remove(myTeam[i])
             inTeam.pop(i)
@@ -66,7 +66,7 @@ while not isCorrect(myTeam):
 
     i = len(myTeam) - 1
     types = []
-    while i >= 0:
+    while i >= 0:  # Eliminar pokemons amb tipus repetits
         pkmn = myTeam[i]
         if pkmn[1] not in types and pkmn[2] not in types:
             types.append(pkmn[1])
@@ -78,20 +78,20 @@ while not isCorrect(myTeam):
 
     evolutions = []
 
-    for poke in myTeam:
+    for poke in myTeam:  # Buscar evolucions
         if poke[0] not in evolutions:
-            web = "https://pokemondb.net/pokedex/" + poke[0]
+            web = "https://pokemondb.net/pokedex/" + poke[0]  # Entrar web del pokemon
             evocrawl = requests.get(web).content
             evodb = BeautifulSoup(evocrawl, 'lxml')
-            for dib in evodb.find_all("div", {"class": "infocard-list-evo"}):
-                for span in dib.find_all("span", {"class": "infocard-lg-data text-muted"}):
+            for dib in evodb.find_all("div", {"class": "infocard-list-evo"}):  # Buscar la taula d'evolucions
+                for span in dib.find_all("span", {"class": "infocard-lg-data text-muted"}):  # Buscar les evolucions
                     nameofevotag = span.find("a")
                     nameofevo = nameofevotag.text
                     if nameofevo != poke[0]:
                         evolutions.append(nameofevo)
 
     i = len(myTeam) - 1
-    while i >= 0:
+    while i >= 0:  # Eliminar evolucions
         poke = myTeam[i]
         if poke[0] in evolutions:
             myTeam.remove(myTeam[i])
@@ -107,9 +107,9 @@ print("Creating html file")
 f = open("result.html", "w")
 headers = "<h1>Equip Pokemon</h1><h2>HackEps 2019 - Galahad_3x</h2><table><tbody>"
 f.write(headers)
-f.write("<tr><td>Sprite</td><td>Nom</td><td>Tipus 1</td><td>Tipus 2</td><td>Número Pokédex</td></tr>")
+f.write("<tr><td>Sprite</td><td>Nom</td><td>Tipus 1</td><td>Tipus 2</td><td>Numero Pokedex</td></tr>")
 
-for pokemon in myTeam:
+for pokemon in myTeam:  # Escriure cada pokemon dins d'una taula
     f.write("<tr><td>")
     data = db.find("tbody")
     for tr in data.find_all("tr"):
@@ -126,6 +126,6 @@ for pokemon in myTeam:
         f.write("<td>" + str(atr) + "</td>")
     f.write("</tr>")
 
-f.write("</tbody><table>")
+f.write("</tbody></table>")
 
 print("Team creation complete. Please open file result.html")

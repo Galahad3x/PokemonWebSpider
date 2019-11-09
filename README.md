@@ -12,5 +12,4 @@ The program has been made using the PyCharm IDE. The program can be run from an 
 python3 PokemonWebSpider.py
 ```
 > Since the program has to open a lot of webs, it takes a long time to run the program. Be patient :)  
-
 The result of running the program will be an html file called result.html, that can be opened by double-clicking it. 
